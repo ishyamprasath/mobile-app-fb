@@ -22,30 +22,31 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install dependencies
-        run: |
-          cd client
-          npm ci
+      - name: Install client dependencies
+        run: npm install --legacy-peer-deps
+        working-directory: client
 
       - name: Build web app
-        run: |
-          cd client
-          npm run build
+        run: npm run build
+        working-directory: client
+
+      - name: Install Capacitor CLI at root
+        run: npm install @capacitor/cli @capacitor/core @capacitor/android --legacy-peer-deps --no-save
 
       - name: Sync Capacitor
-        run: npx cap sync
+        run: npx cap sync android
 
       - name: Build APK
         run: |
-          cd android
           chmod +x gradlew
-          ./gradlew assembleRelease
+          ./gradlew assembleDebug
+        working-directory: android
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-apk
-          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+          name: app-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
 
   build-ios:
     runs-on: macos-latest
@@ -57,26 +58,44 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: |
-          cd client
-          npm ci
+      - name: Install client dependencies
+        run: npm install --legacy-peer-deps
+        working-directory: client
 
       - name: Build web app
-        run: |
-          cd client
-          npm run build
+        run: npm run build
+        working-directory: client
+
+      - name: Install Capacitor CLI at root
+        run: npm install @capacitor/cli @capacitor/core @capacitor/ios --legacy-peer-deps --no-save
 
       - name: Sync Capacitor
-        run: npx cap sync
+        run: npx cap sync ios
 
-      - name: Build iOS
+      - name: Install CocoaPods
+        run: pod install
+        working-directory: ios/App
+
+      - name: Build iOS (unsigned)
         run: |
-          cd ios/App
-          xcodebuild -workspace App.xcworkspace -scheme App -sdk iphoneos -configuration Release -derivedDataPath build archive -archivePath build/App.xcarchive CODE_SIGNING_ALLOWED=NO
+          xcodebuild -workspace App.xcworkspace \
+            -scheme App \
+            -sdk iphoneos \
+            -configuration Debug \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+        working-directory: ios/App
 
-      - name: Upload iOS Archive
+      - name: Package .app
+        run: |
+          mkdir -p Payload
+          cp -r ios/App/build/Build/Products/Debug-iphoneos/App.app Payload/
+          zip -r app-unsigned.ipa Payload
+
+      - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: app-ios-archive
-          path: ios/App/build/App.xcarchive
+          name: app-unsigned-ipa
+          path: app-unsigned.ipa
