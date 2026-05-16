@@ -14,25 +14,25 @@ export function AuthLayout({ title, subtitle, icon, children }: AuthLayoutProps)
       <div className="tvs-corner-top" />
       <div className="tvs-corner-bottom" />
 
-      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-12">
+      <div className="relative z-10 flex flex-1 flex-col items-center px-6 py-6 overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-[360px]"
+          className="w-full max-w-[360px] my-auto"
         >
-          <div className="mb-10 flex flex-col items-center text-center">
+          <div className="mb-4 flex flex-col items-center text-center">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: 'spring', stiffness: 220, damping: 18, delay: 0.1 }}
-              className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#E31E24] text-[#E31E24]"
+              className="mb-3 flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#E31E24] text-[#E31E24]"
             >
               {icon}
             </motion.div>
-            <h1 className="text-[22px] font-bold tracking-tight text-white mb-2">{title}</h1>
-            <p className="text-[13px] text-white/60 font-medium">{subtitle}</p>
-            <div className="tvs-header-line" />
+            <h1 className="text-lg font-bold tracking-tight text-white mb-1">{title}</h1>
+            <p className="text-xs text-white/60 font-medium">{subtitle}</p>
+            <div className="tvs-header-line !mt-3 !mb-0" />
           </div>
 
           {children}

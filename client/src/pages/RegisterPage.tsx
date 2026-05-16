@@ -78,7 +78,7 @@ export function RegisterPage() {
       subtitle="Register to get started and share your feedback"
       icon={<UserPlus size={38} strokeWidth={1.6} />}
     >
-      <form className="space-y-4" onSubmit={handleSubmit}>
+      <form className="space-y-2" onSubmit={handleSubmit}>
         <Field label="Full Name" icon={<User size={18} className="tvs-input-icon" />}>
           <input
             value={formState.name}
