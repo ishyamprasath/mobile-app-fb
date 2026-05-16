@@ -22,16 +22,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install client dependencies
-        run: npm install --legacy-peer-deps
-        working-directory: client
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --workspace=client --include-workspace-root
 
       - name: Build web app
-        run: npm run build
-        working-directory: client
-
-      - name: Install Capacitor CLI at root
-        run: npm install @capacitor/cli @capacitor/core @capacitor/android --legacy-peer-deps --no-save
+        run: npm run build --workspace=client
 
       - name: Sync Capacitor
         run: npx cap sync android
@@ -58,16 +53,11 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install client dependencies
-        run: npm install --legacy-peer-deps
-        working-directory: client
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --workspace=client --include-workspace-root
 
       - name: Build web app
-        run: npm run build
-        working-directory: client
-
-      - name: Install Capacitor CLI at root
-        run: npm install @capacitor/cli @capacitor/core @capacitor/ios --legacy-peer-deps --no-save
+        run: npm run build --workspace=client
 
       - name: Sync Capacitor
         run: npx cap sync ios
