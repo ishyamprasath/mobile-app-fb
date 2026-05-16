@@ -1,0 +1,8 @@
+{
+  "appId": "com.tvs.feedback",
+  "appName": "TVS Feedback",
+  "webDir": "client/dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
